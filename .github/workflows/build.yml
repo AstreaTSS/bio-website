@@ -1,0 +1,60 @@
+name: "Pages Build"
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  deployments: write
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Compress Images
+        id: calibre
+        uses: calibreapp/image-actions@main
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          compressOnly: true
+
+      - name: Setup Node
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install --production=false
+
+      - name: Build Tailwind File
+        run: npx tailwindcss -i src/build.css -o src/main.css
+
+      - name: Remove Old File
+        run: rm src/build.css
+
+      - name: Minify Files
+        run: |
+          npx minify src/main.css > src/main.css
+          npx minify src/fonts.css > src/fonts.css
+          npx minify src/index.html > src/index.html
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: astrea-main
+          directory: src
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
