@@ -39,14 +39,22 @@ jobs:
         run: npm install --production=false
 
       - name: Build Tailwind File
-        run: npx tailwindcss -i src/build.css -o src/main.css --minify
+        run: npx tailwindcss -i src/build.css -o src/main.css
 
       - name: Remove Old File
         run: rm src/build.css
 
-      - name: Minify Files
+      - name: Minify HTML
         run: |
-          npx minify src/fonts.css > src/fonts.css
+          npx minify src/main.css > src/main.min.css
+          npx minify src/fonts.css > src/fonts.min.css
+          npx minify src/index.html > src/index.min.html
+
+      - name: Minify adjustments
+        run: |
+          mv src/index.min.html src/index.html
+          mv src/fonts.min.css src/fonts.css
+          mv src/main.min.css src/main.css
 
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@1
