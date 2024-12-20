@@ -48,12 +48,14 @@ jobs:
         run: |
           npx minify src/main.css > src/main.min.css
           npx minify src/fonts.css > src/fonts.min.css
+          npx minify src/fade.css > src/fade.min.css
           npx minify src/index.html > src/index.min.html
 
       - name: Minify adjustments
         run: |
           mv src/index.min.html src/index.html
           mv src/fonts.min.css src/fonts.css
+          mv src/fade.min.css src/fade.css
           mv src/main.min.css src/main.css
 
       - name: Publish to Cloudflare Pages
