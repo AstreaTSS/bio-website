@@ -58,11 +58,10 @@ jobs:
           mv src/fade.min.css src/fade.css
           mv src/main.min.css src/main.css
 
-      - name: Publish to Cloudflare Pages
-        uses: cloudflare/pages-action@1
+      - name: Push to pages Branch
+        uses: devops-infra/action-commit-push@v1.1.0
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: astrea-main
-          directory: src
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          github_token: "${{ secrets.GITHUB_TOKEN }}"
+          commit_message: "ci: process files"
+          force: true
+          target_branch: pages
