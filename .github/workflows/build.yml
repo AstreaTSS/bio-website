@@ -8,12 +8,6 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-  deployments: write
-
 jobs:
   docs:
     runs-on: ubuntu-latest
