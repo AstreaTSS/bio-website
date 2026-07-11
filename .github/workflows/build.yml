@@ -64,3 +64,4 @@ jobs:
           push_options: '--force'
           branch: pages
           skip_dirty_check: true
+          skip_checkout: true
